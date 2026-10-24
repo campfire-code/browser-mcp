@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>浏览器助手（MCP）</title><style>
+*{box-sizing:border-box}body{margin:0;width:1040px;height:700px;background:#f4f5f7;font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;color:#1d2129;padding:36px}
+.card{background:#fff;border-radius:20px;height:628px;padding:40px 48px;box-shadow:0 2px 14px rgba(0,0,0,.06);position:relative;display:flex;flex-direction:column}
+.brand{position:absolute;right:32px;top:24px;font-size:13px;color:#8a919c}
+h1{margin:0 0 12px;font-size:36px;font-weight:700}
+.desc{font-size:16px;line-height:1.6;color:#4e5560;margin:0 0 18px}
+h2{font-size:15px;color:#ff6a1a;margin:0 0 10px;letter-spacing:1px}
+pre{margin:0 0 16px;background:#1f2430;color:#e6e9ef;border-radius:12px;padding:16px 20px;font:14px/1.55 "SF Mono",Menlo,monospace}
+.k{color:#ffb86b}.s{color:#9be28f}
+.cmd{background:#f4f5f7;border-radius:12px;padding:12px 18px;font:14px/1.5 "SF Mono",Menlo,monospace;color:#1d2129;margin-bottom:14px}
+.warn{margin-top:auto;background:#fff1e8;border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.5;color:#4e5560}.warn b{color:#ff6a1a}
+</style><body><div class="card"><div class="brand">篝火出品</div><h1>浏览器助手（MCP）</h1><p class="desc">让 Claude Code、Cursor、VS Code 等 AI 助手直接操作浏览器：打开网页、点击、填表、读取内容。需要 Node.js 18 或更新版本。</p>
+<h2>配置示例（写进客户端的 MCP 配置）</h2>
+<pre>{
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"playwright"</span>: {
+      <span class="k">"command"</span>: <span class="s">"npx"</span>,
+      <span class="k">"args"</span>: [<span class="s">"@playwright/mcp@latest"</span>]
+    }
+  }
+}</pre>
+<h2>Claude Code 一行命令</h2>
+<div class="cmd">claude mcp add playwright npx @playwright/mcp@latest</div>
+<div class="warn"><b>安全提示　</b>它能替 AI 操作你的浏览器，不要在登录了重要账号的浏览器里随意使用；加 <b>--isolated</b> 可使用不保留登录状态的临时环境。</div></div></body></html>

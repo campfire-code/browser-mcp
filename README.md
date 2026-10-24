@@ -1,3 +1,124 @@
+# 浏览器助手（MCP）
+
+> 篝火出品 · 收录于篝火 App 应用区 · 基于开源项目 [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp)（Apache-2.0）
+
+让 Claude Code、Claude Desktop、Cursor、VS Code 等 AI 助手**直接操作浏览器**：打开网页、点击、填表、读取页面内容。它是微软 Playwright 团队的 MCP 服务，靠页面的"可访问性快照"（结构化文字）工作，不需要看截图，也不需要视觉模型。
+
+本条目是**接入教程**，没有安装包，也没有改动上游代码：你在 AI 助手里添加一段配置，助手需要用浏览器时会自动用 `npx` 启动它。
+
+> **安全提示（请先读）**
+> - 它能替 AI 点击网页、提交表单、读取页面里的内容。默认会在本机保存一份浏览器档案（登录状态会保留），**不要在登录了网银、支付、企业后台等重要账号的浏览器里随意使用**。
+> - 想用干净的环境，在参数里加 `--isolated`（浏览器档案只放内存，关闭即丢失）。
+> - 上游声明自己**不是安全边界**，`--allowed-origins` / `--blocked-origins` 也不能当作安全防线。让 AI 访问不可信网页时，网页内容可能夹带诱导指令，请留意 AI 要执行的操作。
+> - 使用时请遵守目标网站的服务条款和相关法律。
+
+## 准备
+
+- 电脑上装好 **Node.js 18 或更新版本**（上游要求）。终端运行 `node -v` 能看到版本号即可。
+- 一个支持 MCP 的客户端：上游列出的有 VS Code、Cursor、Windsurf、Claude Desktop、Claude Code、Codex、Cline、Gemini CLI、Goose、LM Studio、Warp 等。
+- 网络能访问 npm（`npx` 会下载 `@playwright/mcp`）。
+
+## 通用配置
+
+大多数客户端都能直接用下面这段（上游的"标准配置"）：
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+## 各客户端怎么接入
+
+**Claude Code**（终端里运行一次）：
+
+```bash
+claude mcp add playwright npx @playwright/mcp@latest
+```
+
+**Claude Desktop**：按 [MCP 官方安装指南](https://modelcontextprotocol.io/quickstart/user)，把上面的"通用配置"写进它的 MCP 配置文件，重启 Claude Desktop。
+
+**Cursor**：打开 `Cursor Settings` -> `MCP` -> `Add new MCP Server`，名字随意，类型选 `command`，命令填 `npx @playwright/mcp@latest`。点 `Edit` 可以检查配置、追加参数。
+
+**VS Code**（GitHub Copilot 智能体模式）：按 [VS Code 的 MCP 指南](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server) 使用"通用配置"，或者在终端运行：
+
+```bash
+code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
+```
+
+**Windsurf**、**Gemini CLI**、**LM Studio**、**Warp** 等：用上面的"通用配置"，各自的入口见上游 README 对应客户端折叠段（下方原文保留）。
+
+**Codex**：`codex mcp add playwright npx "@playwright/mcp@latest"`，或写进 `~/.codex/config.toml`：
+
+```toml
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
+```
+
+## 常用参数
+
+参数写在配置的 `args` 列表里，例如让它用本机 Chrome、不弹窗、且不保留登录状态：
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--browser", "chrome", "--headless", "--isolated"]
+    }
+  }
+}
+```
+
+| 参数 | 作用 |
+|---|---|
+| `--headless` | 无界面运行浏览器。默认是有界面（你能看到它在操作） |
+| `--browser <名称>` | 选浏览器或 Chrome 通道，可选 `chrome`、`firefox`、`webkit`、`msedge` |
+| `--isolated` | 浏览器档案只放内存，关闭即丢失登录状态等数据 |
+| `--user-data-dir <路径>` | 指定浏览器档案目录（默认放在系统缓存目录里，按工作区区分） |
+| `--storage-state <路径>` | 配合 `--isolated`，从文件载入 cookie 等初始状态 |
+| `--viewport-size 1280x720` | 设置窗口大小 |
+| `--device "iPhone 15"` | 模拟手机设备 |
+| `--allowed-origins` / `--blocked-origins` | 限制可访问的站点（分号分隔）。上游说明这**不是安全边界** |
+| `--proxy-server <地址>` | 使用代理，例如 `http://myproxy:3128` |
+| `--port 8931` | 改用 HTTP 方式提供服务，客户端里把 `url` 写成 `http://localhost:8931/mcp`（适用于没有显示器或从 IDE 的工作进程启动的情况） |
+
+完整参数表见下方上游原文的"Configuration"一节。
+
+## 验收用例
+
+| 操作 | 应得到 |
+|---|---|
+| 按上面的方式添加配置并重启客户端 | 客户端的 MCP 列表里出现 `playwright`，状态为已连接 |
+| 对 AI 说"打开 https://example.com 并告诉我页面标题" | 浏览器自动打开该页面，AI 回答页面标题（Example Domain） |
+
+## 说明与限制
+
+- 软件本身和 AI 的工具描述都是英文，AI 一般会用中文回复你。
+- 首次启动时 `npx` 需要下载包，可能要等一会儿。
+- 上游另有面向编程助手的命令行方案 [playwright-cli](https://github.com/microsoft/playwright-cli)，更省 token，需要时可参考上游 README 开头的对比。
+
+## 和上游的区别
+
+- 仅在本文件顶部新增中文接入教程，并删除上游的 CI 与发布工作流。代码与上游一致。
+- 本条目不出安装包：用户直接用 `npx` 获取上游官方发布的 `@playwright/mcp`。
+
+## 归属与许可证
+
+上游项目版权归 Microsoft Corporation 所有，按 Apache-2.0 许可证分发，许可证全文见 [LICENSE](LICENSE)。Playwright 是 Microsoft 的商标，本条目与微软无隶属关系。
+
+---
+
+以下为上游 README 原文。
+
+---
+
 ## Playwright MCP
 
 A Model Context Protocol (MCP) server that provides browser automation capabilities using [Playwright](https://playwright.dev). This server enables LLMs to interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models.

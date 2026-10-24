@@ -1,0 +1,10 @@
+{
+  "id": "a05",
+  "slug": "browser-mcp",
+  "name": "浏览器助手（MCP）",
+  "version": "0.0.83-campfire.1",
+  "repo": "campfire-code/browser-mcp",
+  "license": "Apache-2.0",
+  "delivery": "docs",
+  "upstream": { "repo": "microsoft/playwright-mcp", "license": "Apache-2.0", "tag": "v0.0.83" }
+}
