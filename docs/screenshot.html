@@ -1,24 +1,61 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>浏览器助手（MCP）</title><style>
-*{box-sizing:border-box}body{margin:0;width:1040px;height:700px;background:#f4f5f7;font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;color:#1d2129;padding:36px}
-.card{background:#fff;border-radius:20px;height:628px;padding:40px 48px;box-shadow:0 2px 14px rgba(0,0,0,.06);position:relative;display:flex;flex-direction:column}
-.brand{position:absolute;right:32px;top:24px;font-size:13px;color:#8a919c}
-h1{margin:0 0 12px;font-size:36px;font-weight:700}
-.desc{font-size:16px;line-height:1.6;color:#4e5560;margin:0 0 18px}
-h2{font-size:15px;color:#ff6a1a;margin:0 0 10px;letter-spacing:1px}
-pre{margin:0 0 16px;background:#1f2430;color:#e6e9ef;border-radius:12px;padding:16px 20px;font:14px/1.55 "SF Mono",Menlo,monospace}
-.k{color:#ffb86b}.s{color:#9be28f}
-.cmd{background:#f4f5f7;border-radius:12px;padding:12px 18px;font:14px/1.5 "SF Mono",Menlo,monospace;color:#1d2129;margin-bottom:14px}
-.warn{margin-top:auto;background:#fff1e8;border-radius:12px;padding:14px 18px;font-size:14px;line-height:1.5;color:#4e5560}.warn b{color:#ff6a1a}
-</style><body><div class="card"><div class="brand">篝火出品</div><h1>浏览器助手（MCP）</h1><p class="desc">让 Claude Code、Cursor、VS Code 等 AI 助手直接操作浏览器：打开网页、点击、填表、读取内容。需要 Node.js 18 或更新版本。</p>
-<h2>配置示例（写进客户端的 MCP 配置）</h2>
-<pre>{
-  <span class="k">"mcpServers"</span>: {
-    <span class="k">"playwright"</span>: {
-      <span class="k">"command"</span>: <span class="s">"npx"</span>,
-      <span class="k">"args"</span>: [<span class="s">"@playwright/mcp@latest"</span>]
-    }
-  }
-}</pre>
-<h2>Claude Code 一行命令</h2>
-<div class="cmd">claude mcp add playwright npx @playwright/mcp@latest</div>
-<div class="warn"><b>安全提示　</b>它能替 AI 操作你的浏览器，不要在登录了重要账号的浏览器里随意使用；加 <b>--isolated</b> 可使用不保留登录状态的临时环境。</div></div></body></html>
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>浏览器助手</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--a:#23979F;--ad:#136870;--soft:#e6f5f6;--ink:#1c2b2e;--mut:#62767a;--line:#d8e6e8}
+body{width:1040px;height:700px;background:#fbfaf6;font-family:-apple-system,"PingFang SC","Hiragino Sans GB",sans-serif;color:var(--ink);display:flex;overflow:hidden}
+.l{width:430px;padding:30px 30px 26px 36px;display:flex;flex-direction:column;border-right:1px solid #ece8dc}
+.k{font-size:12px;letter-spacing:3px;color:var(--ad);font-weight:700}
+h1{font-size:34px;font-weight:800;margin:6px 0 4px;letter-spacing:1px}
+.s{font-size:14px;color:var(--mut);margin-bottom:16px}
+.ask{border-left:4px solid var(--a);background:var(--soft);padding:10px 14px;font-size:15px;line-height:1.6;border-radius:0 10px 10px 0;margin-bottom:18px}
+.ask small{display:block;color:var(--mut);font-size:12px;margin-bottom:2px}
+.tl{position:relative;padding-left:34px}
+.tl:before{content:"";position:absolute;left:13px;top:8px;bottom:46px;width:2px;background:var(--line)}
+.st{position:relative;margin-bottom:26px}
+.st .d{position:absolute;left:-34px;top:0;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--a);color:var(--ad);font-weight:700;font-size:13px;text-align:center;line-height:24px}
+.st.on .d{background:var(--a);color:#fff}
+.st b{font-size:15px;display:block}
+.st span{font-size:12.5px;color:var(--mut);line-height:1.5;display:block}
+.st code{font-family:ui-monospace,Menlo,monospace;font-size:12px;background:#eef3f3;border-radius:4px;padding:1px 6px;color:var(--ad)}
+.done{margin-top:auto;font-size:13px;color:var(--mut);border-top:1px dashed #d9d3c2;padding-top:10px;line-height:1.6}
+.done b{color:#1a7f4b}
+.r{flex:1;padding:30px 34px 26px 30px;display:flex;flex-direction:column}
+.win{background:#fff;border-radius:12px;border:1px solid #dcd6c6;box-shadow:0 10px 30px rgba(60,50,20,.13);overflow:hidden;flex:1;display:flex;flex-direction:column;position:relative}
+.bar{height:38px;background:#f1eee4;display:flex;align-items:center;gap:7px;padding:0 14px;border-bottom:1px solid #e6e1d2}
+.dot{width:10px;height:10px;border-radius:50%;background:#d6cfbc}
+.url{margin-left:10px;flex:1;height:23px;border-radius:12px;background:#fff;font-size:12px;color:var(--mut);line-height:23px;padding:0 12px}
+.ai{background:var(--a);color:#fff;font-size:12px;font-weight:600;padding:3px 11px;border-radius:12px}
+.pg{padding:22px 30px;flex:1;position:relative}
+.pg h2{font-size:21px;margin-bottom:4px}.pg p{font-size:13px;color:var(--mut);margin-bottom:16px}
+.f{margin-bottom:12px}.f label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px}
+.in{height:36px;border:1.5px solid #d4dde0;border-radius:7px;padding:0 12px;line-height:33px;font-size:14px;background:#fff}
+.in.fill{border-color:var(--a);background:#f4fbfb}
+.in.fill:after{content:"";}
+.row{display:flex;gap:14px}.row .f{flex:1}
+.ta{height:62px;line-height:1.5;padding-top:7px}
+.sub{margin-top:16px;display:inline-block;background:#2f3a3d;color:#fff;font-size:15px;font-weight:600;padding:10px 38px;border-radius:8px;position:relative}
+.ring{position:absolute;left:-7px;top:-7px;right:-7px;bottom:-7px;border:2.5px solid var(--a);border-radius:13px;box-shadow:0 0 0 5px rgba(35,151,159,.18)}
+.cur{position:absolute;right:-8px;bottom:-16px;width:26px;height:26px}
+.tip{position:absolute;right:30px;bottom:30px;background:var(--ink);color:#fff;font-size:13px;padding:7px 13px;border-radius:8px}
+.snap{margin-top:12px;font-size:12px;background:#fff;border:1px solid #e5dfcf;border-radius:10px;padding:11px 15px;font-size:12.5px;line-height:1.6;color:var(--mut)}
+.snap b{color:var(--ad)}
+</style><body>
+<div class="l"><div class="k">AI 动手用浏览器</div><h1>浏览器助手</h1><div class="s">AI 自己打开网页、点击、填表</div>
+ <div class="ask"><small>你对 AI 说</small>打开访客登记页，登记明天来访的王先生，再点提交登记</div>
+ <div class="tl">
+  <div class="st"><i class="d">1</i><b>打开网页</b><span>浏览器弹出，进入访客登记页</span></div>
+  <div class="st"><i class="d">2</i><b>读取页面结构</b><span>靠页面的文字结构认出输入框和按钮，不用看截图</span></div>
+  <div class="st"><i class="d">3</i><b>填写表单</b><span>姓名、手机号、来访事由逐项填好</span></div>
+  <div class="st on"><i class="d">4</i><b>点击「提交登记」</b><span>操作过程你在浏览器里看得见</span></div>
+ </div>
+ <div class="done"><b>完成</b>　已登记王先生，明天上午 10 点来访。<br>建议用不保留登录状态的隔离模式，别在登着网银的浏览器里用。</div>
+</div>
+<div class="r"><div class="win"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">访客登记 - 公司前台</span><span class="ai">AI 正在操作</span></div>
+ <div class="pg"><h2>访客登记</h2><p>请填写来访信息，前台会提前通知接待人。</p>
+  <div class="row"><div class="f"><label>访客姓名</label><div class="in fill">王建国</div></div><div class="f"><label>手机号</label><div class="in fill">138****5678</div></div></div>
+  <div class="row"><div class="f"><label>来访日期</label><div class="in fill">明天 10:00</div></div><div class="f"><label>被访人</label><div class="in fill">市场部　李敏</div></div></div>
+  <div class="f"><label>来访事由</label><div class="in ta fill">洽谈秋季联合活动的合作方案</div></div>
+  <div class="sub"><span class="ring"></span>提交登记<svg class="cur" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.5L9 19z" fill="#1c2b2e" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+  <div class="tip">已提交，登记成功</div>
+ </div></div>
+ <div class="snap"><b>页面结构（AI 看到的）</b>　输入框「访客姓名」已填、「手机号」已填；按钮「提交登记」可点击</div>
+</div></body></html>

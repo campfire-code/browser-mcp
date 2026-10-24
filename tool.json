@@ -1,7 +1,7 @@
 {
   "id": "a05",
   "slug": "browser-mcp",
-  "name": "浏览器助手（MCP）",
+  "name": "浏览器助手（AI 接入教程）",
   "version": "0.0.83-campfire.1",
   "repo": "campfire-code/browser-mcp",
   "license": "Apache-2.0",

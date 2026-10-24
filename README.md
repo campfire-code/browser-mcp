@@ -1,8 +1,10 @@
-# 浏览器助手（MCP）
+# 浏览器助手（AI 接入教程）
+
+![浏览器助手使用画面](docs/screenshot.png)
 
 > 篝火出品 · 收录于篝火 App 应用区 · 基于开源项目 [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp)（Apache-2.0）
 
-让 Claude Code、Claude Desktop、Cursor、VS Code 等 AI 助手**直接操作浏览器**：打开网页、点击、填表、读取页面内容。它是微软 Playwright 团队的 MCP 服务，靠页面的"可访问性快照"（结构化文字）工作，不需要看截图，也不需要视觉模型。
+让 Claude Code（Claude 命令行版）、Claude 桌面版、Cursor、VS Code 等 AI 助手**直接操作浏览器**：打开网页、点击、填表、读取页面内容。它是微软 Playwright 团队做的「AI 工具接入协议（MCP）」服务，靠页面的"可访问性快照"（结构化文字）工作，不需要看截图，也不需要视觉模型。
 
 本条目是**接入教程**，没有安装包，也没有改动上游代码：你在 AI 助手里添加一段配置，助手需要用浏览器时会自动用 `npx` 启动它。
 
@@ -15,7 +17,7 @@
 ## 准备
 
 - 电脑上装好 **Node.js 18 或更新版本**（上游要求）。终端运行 `node -v` 能看到版本号即可。
-- 一个支持 MCP 的客户端：上游列出的有 VS Code、Cursor、Windsurf、Claude Desktop、Claude Code、Codex、Cline、Gemini CLI、Goose、LM Studio、Warp 等。
+- 一个支持 AI 工具接入协议（MCP）的 AI 客户端：上游列出的有 VS Code、Cursor、Windsurf、Claude 桌面版、Claude Code、Codex、Cline、Gemini CLI、Goose、LM Studio、Warp 等。
 - 网络能访问 npm（`npx` 会下载 `@playwright/mcp`）。
 
 ## 通用配置
@@ -41,7 +43,7 @@
 claude mcp add playwright npx @playwright/mcp@latest
 ```
 
-**Claude Desktop**：按 [MCP 官方安装指南](https://modelcontextprotocol.io/quickstart/user)，把上面的"通用配置"写进它的 MCP 配置文件，重启 Claude Desktop。
+**Claude 桌面版**：按 [官方安装指南](https://modelcontextprotocol.io/quickstart/user)（英文），把上面的"通用配置"写进它的配置文件，重启 Claude 桌面版。
 
 **Cursor**：打开 `Cursor Settings` -> `MCP` -> `Add new MCP Server`，名字随意，类型选 `command`，命令填 `npx @playwright/mcp@latest`。点 `Edit` 可以检查配置、追加参数。
 
@@ -95,18 +97,18 @@ args = ["@playwright/mcp@latest"]
 
 | 操作 | 应得到 |
 |---|---|
-| 按上面的方式添加配置并重启客户端 | 客户端的 MCP 列表里出现 `playwright`，状态为已连接 |
+| 按上面的方式添加配置并重启客户端 | 客户端的工具服务列表里出现 `playwright`，状态为已连接 |
 | 对 AI 说"打开 https://example.com 并告诉我页面标题" | 浏览器自动打开该页面，AI 回答页面标题（Example Domain） |
 
 ## 说明与限制
 
-- 软件本身和 AI 的工具描述都是英文，AI 一般会用中文回复你。
+- 软件本身和 AI 看到的工具描述都是英文（上游代码，本仓库未改），AI 一般会用中文回复你。
 - 首次启动时 `npx` 需要下载包，可能要等一会儿。
 - 上游另有面向编程助手的命令行方案 [playwright-cli](https://github.com/microsoft/playwright-cli)，更省 token，需要时可参考上游 README 开头的对比。
 
 ## 和上游的区别
 
-- 仅在本文件顶部新增中文接入教程，并删除上游的 CI 与发布工作流。代码与上游一致。
+- 仅在本文件顶部新增中文接入教程和中文说明卡（`docs/screenshot.png`），并删除上游的 CI 与发布工作流。代码与上游一致。
 - 本条目不出安装包：用户直接用 `npx` 获取上游官方发布的 `@playwright/mcp`。
 
 ## 归属与许可证
